@@ -42,7 +42,6 @@ with avg_sales as (
         on s.sales_person_id = e.employee_id
     group by seller
 )
-
 select
     seller,
     average_income
@@ -71,11 +70,10 @@ with day_of_week_income as (
     group by s.sales_person_id, day_num, day_name
     order by day_num, s.sales_person_id
 )
-
-select
+SELECT
+    CONCAT(e.first_name, ' ', e.last_name) as seller,
     day_of_week_income.day_name as day_of_week,
-    day_of_week_income.income,
-    CONCAT(e.first_name, ' ', e.last_name) as seller
+    day_of_week_income.income
 from day_of_week_income
 left join employees as e
     on day_of_week_income.sales_person_id = e.employee_id
@@ -102,10 +100,10 @@ order by age_category;
 --(месяц в формате YYYY-MM, число уникальных покупателей, сумма выручки).
 -- Сортировка по дате по возрастанию.
 
-select
+SELECT
+    TO_CHAR(selling_month, 'YYYY-MM') as selling_month,
     total_customers,
-    income,
-    TO_CHAR(selling_month, 'YYYY-MM') as selling_month
+    income
 from
     (select
         DATE_TRUNC('month', s.sale_date) as selling_month,
@@ -132,7 +130,6 @@ with tab as (
         sales
     group by customer_id
 )
-
 select
     CONCAT(c.first_name, ' ', c.last_name) as customer,
     MIN(s.sale_date) as sale_date,
