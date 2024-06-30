@@ -5,13 +5,14 @@ from
     customers;
 
 --Задание 5.1. 
---Выводит 10 продавцов с наибольшей выручкой (Имя-фамилия, количество продаж, выручка).
+--Выводит 10 продавцов с наибольшей выручкой
+-- (Имя-фамилия, количество продаж, выручка).
 -- Сортировка по убыванию выручки.
 
 select
     CONCAT(e.first_name, ' ', e.last_name) as seller,
     COUNT(s.sales_id) as operations,
-    FLOOR(SUM(quantity * price)) as income
+    FLOOR(SUM(s.quantity * p.price)) as income
 from sales as s
 left join products as p
     on s.product_id = p.product_id
@@ -23,15 +24,17 @@ limit 10;
 
 --Задание 5.2. 
 --Выводит всех продавцов, чья выручка ниже средней выручки всех продавцов 
---(Не средней суммы продажи или средней выручки по всей компании, это разные суммы.)
---(Имя-фамилия, средняя выручка за сделку). Сортировка по общей выручке продавца (в таблице не отражена)
+--(Не средней суммы продажи или средней выручки по всей компании,
+-- это разные суммы.)
+--(Имя-фамилия, средняя выручка за сделку). 
+--Сортировка по общей выручке продавца (в таблице не отражена)
 
 with avg_sales as (
     select
         CONCAT(e.first_name, ' ', e.last_name) as seller,
         COUNT(s.sales_id) as operations,
-        FLOOR(SUM(quantity * price)) as income,
-        FLOOR(AVG(quantity * price)) as average_income
+        FLOOR(SUM(s.quantity * p.price)) as income,
+        FLOOR(AVG(s.quantity * p.price)) as average_income
     from sales as s
     left join products as p
         on s.product_id = p.product_id
@@ -51,7 +54,8 @@ order by average_income asc;
 --Задание 5.3. 
 --Выводит суммарные продажи каждого продавца в определённый день недели. 
 --Напр.:Сколько всего Джон продал за все понедельники.
---(Имя-фамилия, день недели, выручка). Сортировка по порядковому дню недели и продавцу.
+--(Имя-фамилия, день недели, выручка).
+-- Сортировка по порядковому дню недели и продавцу.
 
 with day_of_week_income as (
     select
@@ -69,13 +73,13 @@ with day_of_week_income as (
 )
 
 select
-    day_name as day_of_week,
-    income,
+    day_of_week_income.day_name as day_of_week,
+    day_of_week_income.income,
     CONCAT(e.first_name, ' ', e.last_name) as seller
 from day_of_week_income
 left join employees as e
     on day_of_week_income.sales_person_id = e.employee_id
-order by day_num, seller;
+order by day_of_week_income.day_num, seller;
 
 --Задание 6.1.
 --Запрос выводит 3 возрастные группы: 16-25 лет, 26-40 и 40+
@@ -101,11 +105,11 @@ order by age_category;
 select
     total_customers,
     income,
-    to_char(selling_month, 'YYYY-MM') as selling_month
+    TO_CHAR(selling_month, 'YYYY-MM') as selling_month
 from
     (select
-        date_trunc('month', sale_date) as selling_month,
-        COUNT(distinct customer_id) as total_customers,
+        DATE_TRUNC('month', s.sale_date) as selling_month,
+        COUNT(distinct s.customer_id) as total_customers,
         FLOOR(SUM(s.quantity * p.price)) as income
     from sales as s
     left join
@@ -113,7 +117,7 @@ from
         on s.product_id = p.product_id
     group by selling_month
     order by selling_month asc) as t;
- 
+
 --Задание 6.3.
 --Запрос выводит перечень покупателей, чья первая покупка была за 0 рублей,
 -- т.е. по акции, дату первой покупки и продавца.
@@ -131,7 +135,7 @@ with tab as (
 
 select
     CONCAT(c.first_name, ' ', c.last_name) as customer,
-    MIN(sale_date) as sale_date,
+    MIN(s.sale_date) as sale_date,
     CONCAT(e.first_name, ' ', e.last_name) as seller
 from sales as s
 left join customers as c
@@ -143,6 +147,6 @@ left join products as p
 left join
     tab
     on c.customer_id = tab.customer_id
-where price = 0 and sale_date = min_date
+where p.price = 0 and sale_date = tab.min_date
 group by customer, seller, s.customer_id
 order by s.customer_id;
