@@ -73,9 +73,9 @@ with day_of_week_income as (
 )
 
 select
-    CONCAT(e.first_name, ' ', e.last_name) as seller,
     day_of_week_income.day_name as day_of_week,
-    day_of_week_income.income
+    day_of_week_income.income,
+    CONCAT(e.first_name, ' ', e.last_name) as seller
 from day_of_week_income
 left join employees as e
     on day_of_week_income.sales_person_id = e.employee_id
@@ -103,9 +103,9 @@ order by age_category;
 -- Сортировка по дате по возрастанию.
 
 select
-    TO_CHAR(selling_month, 'YYYY-MM') as selling_month,
     total_customers,
-    income
+    income,
+    TO_CHAR(selling_month, 'YYYY-MM') as selling_month
 from
     (select
         DATE_TRUNC('month', s.sale_date) as selling_month,
