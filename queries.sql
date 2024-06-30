@@ -105,8 +105,8 @@ select
 from
     (select
         date_trunc('month', sale_date) as selling_month,
-        count(distinct customer_id) as total_customers,
-        floor(sum(quantity * price)) as income
+        COUNT(distinct customer_id) as total_customers,
+        FLOOR(SUM(s.quantity * p.price)) as income
     from sales as s
     left join
         products as p
@@ -128,6 +128,7 @@ with tab as (
         sales
     group by customer_id
 )
+
 select
     CONCAT(c.first_name, ' ', c.last_name) as customer,
     MIN(sale_date) as sale_date,
