@@ -68,8 +68,8 @@ with day_of_week_income as (
     from sales as s
     left join products as p
         on s.product_id = p.product_id
-    group by 1, 2, 3
-    order by 2, 1
+    group by s.sales_person_id, day_num, day_name
+    order by day_num, s.sales_person_id
 )
 
 select
