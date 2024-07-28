@@ -135,6 +135,6 @@ left join employees as e
     on s.sales_person_id = e.employee_id
 left join products as p
     on s.product_id = p.product_id
-where p.price = 0 
+where p.price = 0
 group by 1, 3, s.customer_id
 order by customer;
