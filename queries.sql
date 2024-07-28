@@ -68,7 +68,7 @@ with day_of_week_income as (
     from sales as s
     left join products as p
         on s.product_id = p.product_id
-    group by s.sales_person_id, day_of_week_income.day_num, day_of_week_income.day_name
+    group by s.sales_person_id, day_num, day_name
     order by day_num, s.sales_person_id
 )
 
