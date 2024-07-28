@@ -79,7 +79,7 @@ select
 from day_of_week_income
 left join employees as e
     on day_of_week_income.sales_person_id = e.employee_id
-order by day_of_week_income.day_num, 3;
+order by day_of_week_income.day_num, seller;
 
 --Задание 6.1.
 --Запрос выводит 3 возрастные группы: 16-25 лет, 26-40 и 40+
