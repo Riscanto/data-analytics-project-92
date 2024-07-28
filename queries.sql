@@ -75,7 +75,7 @@ with day_of_week_income as (
 select
     day_of_week_income.day_name as day_of_week,
     day_of_week_income.income,
-    e.first_name||' '||e.last_name as seller
+    e.first_name || ' ' || e.last_name as seller
 from day_of_week_income
 left join employees as e
     on day_of_week_income.sales_person_id = e.employee_id
@@ -125,9 +125,9 @@ from
 -- Сортировка по customer_id, индивидуальному идентификатору покупателя.
 
 select distinct on (customer)
-    c.first_name||' '||c.last_name as customer,
+    c.first_name || ' ' || c.last_name as customer,
     MIN(s.sale_date) as sale_date,
-    e.first_name||' '||e.last_name as seller
+    e.first_name || ' ' || e.last_name as seller
 from sales as s
 left join customers as c
     on s.customer_id = c.customer_id
